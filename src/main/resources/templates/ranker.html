@@ -16,17 +16,32 @@
 
 <body>
 
-	<div class="container">
-		<div class="row">
-			<h1>Movies</h1>
+	<div 
+		class="container">
+		<div 
+			class="row">
+			<h1 th:inline="text">
+				Movies
+				<small th:text="${page}"> test </small>
+			</h1>
 		</div>
 
-		<form th:action=@{/ranker} method="GET">
-			<div class="row form-group" style="width: 50%">
-				<select class="form-control" th:field="*{type}" id="genreSelect"
+		<form 
+			th:action=@{/ranker} 
+			method="GET">
+			<div 
+				class="row form-group" 
+				style="width: 50%">
+				<select 
+					class="form-control" 
+					id="genreSelect"
+					name="genreSelect"
 					onchange="getComboA()">
-					<option th:each="type : ${genres}" th:value="${type.idGenre}"
-						th:text="${type.name}">Wireframe</option>
+					<option 
+						th:each="genre : ${genres}" 
+						th:value="${genre.idGenre}"
+						th:text="${genre.name}"
+						th:selected="${genre.idGenre==idGenre}"/>
 				</select>
 			</div>
 
@@ -65,28 +80,28 @@
 					<ul class="pagination">
 						<li th:class="${products.number == 0} ? disabled"><a
 							class="pageLink"
-							th:href="@{/ranker/(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+							th:href="@{/ranker/(idGenre=${idGenre}, page=1)}">&laquo;</a>
 						</li>
 						<li th:class="${products.number == 0} ? disabled"><a
 							class="pageLink"
-							th:href="@{/ranker/(pageSize=${selectedPageSize}, page=${products.number})}">&larr;</a>
+							th:href="@{/ranker/(idGenre=${idGenre}, page=${products.number})}">&larr;</a>
 						</li>
 						<li
 							th:class="${products.number == (page - 1)} ? 'active pointer-disabled'"
 							th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
 							<a class="pageLink"
-							th:href="@{/ranker/(pageSize=${selectedPageSize}, page=${page})}"
+							th:href="@{/ranker/(idGenre=${idGenre}, page=${page})}"
 							th:text="${page}"></a>
 						</li>
 						<li
 							th:class="${products.number + 1 == products.totalPages} ? disabled">
 							<a class="pageLink"
-							th:href="@{/ranker/(pageSize=${selectedPageSize}, page=${products.number + 2})}">&rarr;</a>
+							th:href="@{/ranker/(idGenre=${idGenre}, page=${products.number + 2})}">&rarr;</a>
 						</li>
 						<li
 							th:class="${products.number + 1 == products.totalPages} ? disabled">
 							<a class="pageLink"
-							th:href="@{/ranker/(pageSize=${selectedPageSize}, page=${products.totalPages})}">&raquo;</a>
+							th:href="@{/ranker/(idGenre=${idGenre}, page=${products.totalPages})}">&raquo;</a>
 						</li>
 					</ul>
 				</div>
@@ -98,11 +113,14 @@
 	<script th:src="@{/js/app.js}"></script>
 
 	<script th:inline="javascript">
-	    function getComboA() {
-			var genres = document.getElementById("genreSelect");
-			var selectedGenre = genres.options[genres.selectedIndex];
-			window.location.replace("ranker/?idGenre=" + selectedGenre.value);
-		}
+		/*<![CDATA[*/
+			function getComboA() {
+				var genres = document.getElementById("genreSelect");
+				var selectedGenre = genres.options[genres.selectedIndex];
+				var selectedPage = /*[[${page}]]*/ 'default';
+				window.location.replace("?idGenre=" + selectedGenre.value+"&page=" + selectedPage);
+			}
+		/*]]>*/
 	</script>
 
 </body>

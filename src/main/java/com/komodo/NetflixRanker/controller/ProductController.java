@@ -3,8 +3,6 @@ package com.komodo.NetflixRanker.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,61 +28,25 @@ public class ProductController {
     private GenreService genreService;
     
     private static final int BUTTONS_TO_SHOW = 5;
-    private static final int INITIAL_PAGE = 0;
-    private static final int INITIAL_PAGE_SIZE = 20;
-    private static final int[] PAGE_SIZES = {5, 10, 20};
-
+    private static final int PAGE_SIZE = 20;
     
     @RequestMapping(value = "/ranker", method = RequestMethod.GET)
-    public ModelAndView showPersonsPage(@RequestParam("pageSize") Optional<Integer> pageSize,
-                                        @RequestParam("page") Optional<Integer> page,
-                                        @RequestParam("type") Optional<String> type,
+    public ModelAndView showPersonsPage(@RequestParam("page") Optional<Integer> page,
                                         @RequestParam("idGenre") Optional<Integer> idGenre) {
         ModelAndView modelAndView = new ModelAndView("ranker");
 
-        int idGenreSent = idGenre.orElse(0);
-        String getType = type.orElse("");
-        
-        int evalPageSize = pageSize.orElse(INITIAL_PAGE_SIZE);
-        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
+        int idGenreSelected = idGenre.orElse(1);
+        int pageSelected = page.orElse(1);
 
-        Page<Product> products = productService.findAllPageable(PageRequest.of(evalPage, evalPageSize));
+        Page<Product> products = productService.findAllPageable(PageRequest.of(pageSelected-1, PAGE_SIZE));
         Pager pager = new Pager(products.getTotalPages(), products.getNumber(), BUTTONS_TO_SHOW);
 
         List<Genre> genres = genreService.findAllGenres();
         modelAndView.addObject("products", products);
-        modelAndView.addObject("selectedPageSize", evalPageSize);
-        modelAndView.addObject("pageSizes", PAGE_SIZES);
-        modelAndView.addObject("pager", pager);
         modelAndView.addObject("genres", genres);
-        modelAndView.addObject("type", new String());
-        modelAndView.addObject("idGenre", idGenreSent);
+        modelAndView.addObject("idGenre", idGenreSelected);
+        modelAndView.addObject("pager", pager);
+        modelAndView.addObject("page", pageSelected);
         return modelAndView;
     }
-    
-//    @RequestMapping(value = "/ranker", method = RequestMethod.POST)
-//    public ModelAndView rankerSearch(
-//    		HttpServletRequest request) {
-//    	String nameGenre = request.getParameter("nameGenre");
-//    	ModelAndView modelAndView = new ModelAndView("ranker");
-////
-////        int idGenreSent = idGenre.orElse(0);
-////        String getType = type.orElse("");
-////        
-////        int evalPageSize = INITIAL_PAGE_SIZE;
-////        int evalPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
-////
-////        Page<Product> products = productService.findAllPageable(PageRequest.of(evalPage, evalPageSize));
-////        Pager pager = new Pager(products.getTotalPages(), products.getNumber(), BUTTONS_TO_SHOW);
-////
-////        List<Genre> genres = genreService.findAllGenres();
-////        modelAndView.addObject("products", products);
-////        modelAndView.addObject("selectedPageSize", evalPageSize);
-////        modelAndView.addObject("pageSizes", PAGE_SIZES);
-////        modelAndView.addObject("pager", pager);
-////        modelAndView.addObject("genres", genres);
-////        modelAndView.addObject("type", new String());
-////        modelAndView.addObject("idGenre", idGenreSent);
-//        return modelAndView;
-//    }
 }
