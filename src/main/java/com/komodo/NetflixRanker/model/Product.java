@@ -14,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.komodo.NetflixRanker.util.ProductUtil;
 
 import lombok.Data;
 
@@ -46,11 +49,14 @@ public class Product {
 	private String imdbRating;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinTable(name = "Product_Genre", 
+	@JoinTable(name = "product_genre", 
 		joinColumns = { @JoinColumn(name = "id_product") }, 
 		inverseJoinColumns = {@JoinColumn(name = "id_genre") })
 	private Set<Genre> genres = new HashSet<>();
-
+	
+	@Transient
+	private String genresDesc;
+	
 	public int getIdProduct() {
 		return idProduct;
 	}
@@ -118,8 +124,16 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [idProduct=" + idProduct + ", title=" + title + ", year=" + year + ", runtime=" + runtime
-				+ ", director=" + director + ", metascore=" + metascore + ", imdbRating=" + imdbRating + ", genres="
-				+ genres + "]";
+				+ ", director=" + director + ", metascore=" + metascore + ", imdbRating=" + imdbRating + ", genresDesc="
+				+ genresDesc + "]";
+	}
+
+	public String getGenresDesc() {
+		return ProductUtil.getGenresToString(genres);
+	}
+
+	public void setGenresDesc(String genresDesc) {
+		this.genresDesc = genresDesc;
 	}
 	
 }
