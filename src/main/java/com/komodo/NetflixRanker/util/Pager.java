@@ -1,11 +1,5 @@
 package com.komodo.NetflixRanker.util;
 
-/**
- * Used to calculate span of buttons which will be displayed on a page
- *
- * @author Branislav Lazic
- * @author Bruno Raljic
- */
 public class Pager {
 
     private int buttonsToShow = 5;

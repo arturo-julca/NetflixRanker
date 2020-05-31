@@ -21,7 +21,7 @@
 		<div 
 			class="row">
 			<h1 th:inline="text">
-				Movies
+				NEW Movies
 				<small th:text="${page}"> test </small>
 			</h1>
 		</div>
@@ -57,7 +57,8 @@
 							<th>Año</th>
 							<th>Duracion</th>
 							<th>Metascore</th>
-							<th>IMDB rating</th>
+							<th>IMDB</th>
+							<th>Generos</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -68,6 +69,7 @@
 							<td th:text="${prod.runtime}" />
 							<td th:text="${prod.metascore}" />
 							<td th:text="${prod.imdbRating}" />
+							<td th:text="${prod.genresDesc}" />
 						</tr>
 					</tbody>
 				</table>
